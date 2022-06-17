@@ -25,7 +25,11 @@ ENDPOINT = ENDPOINTS
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 
-HOMEWORK_STATUSES = STATUSES
+HOMEWORK_STATUSES = {
+    'approved': 'Работа проверена: ревьюеру всё понравилось. Ура!',
+    'reviewing': 'Работа взята на проверку ревьюером.',
+    'rejected': 'Работа проверена: у ревьюера есть замечания.'
+}
 
 
 logging.basicConfig(
@@ -65,19 +69,23 @@ def get_api_answer(current_timestamp):
 def check_response(response):
     """Проверяет ответ API на корректность."""
     homeworks_list = response['homeworks']
-    if type(response) is not dict:
+    if homeworks_list not in response['homeworks']:
+        msg = f'Ошибка доступа по ключу homeworks: {KeyError}'
+        logger.error(msg)
+        raise exceptions.CheckResponseException(msg)
+    elif type(response) is not dict:
         msg = 'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    if homeworks_list is None:
+    elif homeworks_list is None:
         msg = 'В ответе API нет словаря с домашней работой'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    if len(homeworks_list) == 0:
+    elif len(homeworks_list) == 0:
         msg = 'За последнее время не было домашней работы'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    if not isinstance(homeworks_list, list):
+    elif not isinstance(homeworks_list, list):
         msg = 'В ответе API домашки представлены не списком'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
