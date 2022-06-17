@@ -69,7 +69,7 @@ def get_api_answer(current_timestamp):
 def check_response(response):
     """Проверяет ответ API на корректность."""
     homeworks_list = response['homeworks']
-    if homeworks_list not in response['homeworks']:
+    if 'homeworks' not in response:
         msg = f'Ошибка доступа по ключу homeworks: {KeyError}'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
