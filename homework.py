@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 
 import exceptions
 
+from settings import *
+
 load_dotenv()
 
 
@@ -18,16 +20,12 @@ PRACTICUM_TOKEN = os.getenv('PRAKTIKUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('CHAT_ID')
 
-RETRY_TIME = 600
-ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
+RETRY_TIME=TIME_BETWEEN_ORDERS
+ENDPOINT=ENDPOINTS
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 
-HOMEWORK_STATUSES = {
-    'approved': 'Работа проверена: ревьюеру всё понравилось. Ура!',
-    'reviewing': 'Работа взята на проверку ревьюером.',
-    'rejected': 'Работа проверена: у ревьюера есть замечания.'
-}
+HOMEWORK_STATUSES=STATUSES
 
 
 logging.basicConfig(
@@ -66,10 +64,9 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    try:
-        homeworks_list = response['homeworks']
-    except KeyError as e:
-        msg = f'Ошибка доступа по ключу homeworks: {e}'
+    homeworks_list = response['homeworks']
+    if type(response) is not dict:
+        msg = f'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
     if homeworks_list is None:
@@ -89,22 +86,16 @@ def check_response(response):
 
 def parse_status(homework):
     """Извлекает из информации о конкретной домашней работе ее статус."""
-    try:
-        homework_name = homework.get('homework_name')
-    except KeyError as e:
-        msg = f'Ошибка доступа по ключу homework_name: {e}'
-        logger.error(msg)
-    try:
-        homework_status = homework.get('status')
-    except KeyError as e:
-        msg = f'Ошибка доступа по ключу status: {e}'
-        logger.error(msg)
-
+    if 'homework_name' not in homework:
+        raise KeyError(logger.error('Ошибка доступа \'homework_name\''))
+    elif 'status' not in homework:
+        raise KeyError(logger.error('Ошибка ключа \'status\''))
+    elif homework['status'] not in HOMEWORK_STATUSES:
+        raise logger.error('Ошибка статуса')
+    homework_name = homework['homework_name']
+    homework_status = homework['status']
     verdict = HOMEWORK_STATUSES[homework_status]
-    if verdict is None:
-        msg = 'Неизвестный статус домашней работы'
-        logger.error(msg)
-        raise exceptions.UnknownHWStatusException(msg)
+    logger.info('Получен статус')
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
