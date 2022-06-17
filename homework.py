@@ -11,8 +11,6 @@ from dotenv import load_dotenv
 
 import exceptions
 
-from settings import ENDPOINTS, STATUSES, TIME_BETWEEN_ORDERS
-
 load_dotenv()
 
 
