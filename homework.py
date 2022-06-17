@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 import exceptions
 
-from settings import *
+from settings import ENDPOINTS, STATUSES, TIME_BETWEEN_ORDERS
 
 load_dotenv()
 
@@ -20,12 +20,12 @@ PRACTICUM_TOKEN = os.getenv('PRAKTIKUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('CHAT_ID')
 
-RETRY_TIME=TIME_BETWEEN_ORDERS
-ENDPOINT=ENDPOINTS
+RETRY_TIME = TIME_BETWEEN_ORDERS
+ENDPOINT = ENDPOINTS
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 
-HOMEWORK_STATUSES=STATUSES
+HOMEWORK_STATUSES = STATUSES
 
 
 logging.basicConfig(
@@ -66,7 +66,7 @@ def check_response(response):
     """Проверяет ответ API на корректность."""
     homeworks_list = response['homeworks']
     if type(response) is not dict:
-        msg = f'Ошибка словаря'
+        msg = 'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
     if homeworks_list is None:
