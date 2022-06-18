@@ -80,7 +80,7 @@ def check_response(response):
             msg = 'В ответе API домашки представлены не списком'
             logger.error(msg)
             raise exceptions.CheckResponseException(msg)
-        return homeworks
+    return homeworks
 
 
 def parse_status(homework):
