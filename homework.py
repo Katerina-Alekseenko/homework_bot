@@ -59,7 +59,7 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    homeworks_list = response.get('homeworks', None)
+    homeworks = response.get('homeworks', None)
     if 'homeworks' not in response:
         msg = 'Ошибка доступа по ключу homeworks'
         logger.error(msg)
@@ -68,19 +68,19 @@ def check_response(response):
         msg = 'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    elif homeworks_list is None:
+    elif homeworks is None:
         msg = 'В ответе API нет словаря с домашней работой'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    elif len(homeworks_list) == 0:
+    elif len(homeworks) == 0:
         msg = 'За последнее время не было домашней работы'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    elif not isinstance(homeworks_list, list):
+    elif not isinstance(homeworks, list):
         msg = 'В ответе API домашки представлены не списком'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    return homeworks_list
+    return homeworks
 
 
 def parse_status(homework):
