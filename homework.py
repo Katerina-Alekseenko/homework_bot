@@ -59,12 +59,16 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    homeworks_list = response['homeworks']
+    if 'homeworks' not in response:
+        msg = f'Ошибка доступа по ключу homeworks'
+        logger.error(msg) 
+        raise KeyError(msg)
     if type(response) is not dict:
         msg = 'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    elif homeworks_list is None:
+    homeworks_list = response.get('homeworks', None)
+    if homeworks_list is None:
         msg = 'В ответе API нет словаря с домашней работой'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
@@ -76,7 +80,6 @@ def check_response(response):
         msg = 'В ответе API домашки представлены не списком'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
-    homeworks_list = response.get('homeworks', None)
     return homeworks_list
 
 
