@@ -59,7 +59,6 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    homeworks_list = response.get('homeworks', None)
     if type(response) is not dict:
         msg = 'Ошибка словаря'
         logger.error(msg)
@@ -76,6 +75,7 @@ def check_response(response):
         msg = 'В ответе API домашки представлены не списком'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
+    homeworks_list = response.get('homeworks', None)
     return homeworks_list
 
 
