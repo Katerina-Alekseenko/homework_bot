@@ -59,7 +59,7 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    homeworks_list = response.get('homeworks')
+    homeworks_list = response.get('homeworks', None)
     if type(response) is not dict:
         msg = 'Ошибка словаря'
         logger.error(msg)
