@@ -60,8 +60,8 @@ def get_api_answer(current_timestamp):
 def check_response(response):
     """Проверяет ответ API на корректность."""
     if 'homeworks' not in response:
-        msg = f'Ошибка доступа по ключу homeworks'
-        logger.error(msg) 
+        msg = 'Ошибка доступа по ключу homeworks'
+        logger.error(msg)
         raise KeyError(msg)
     if type(response) is not dict:
         msg = 'Ошибка словаря'
