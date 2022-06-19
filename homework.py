@@ -62,7 +62,7 @@ def check_response(response):
     if 'homeworks' not in response:
         msg = 'Ошибка доступа по ключу homeworks'
         logger.error(msg)
-        raise TypeError(msg)
+        raise exceptions.CheckResponseException(msg)
     if type(response) is not dict:
         msg = 'Ошибка словаря'
         logger.error(msg)
