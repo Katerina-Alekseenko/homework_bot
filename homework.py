@@ -46,10 +46,12 @@ def get_api_answer(current_timestamp):
     """Делает запрос к эндпоинту API-сервиса."""
     timestamp = current_timestamp
     params = {'from_date': timestamp}
+
     try:
         response = requests.get(ENDPOINT, headers=HEADERS, params=params)
     except exceptions.APIResponseStatusCodeException:
         logger.error('Сбой при запросе к эндпоинту')
+
     if response.status_code != HTTPStatus.OK:
         msg = 'Сбой при запросе к эндпоинту'
         logger.error(msg)
@@ -67,7 +69,9 @@ def check_response(response):
         msg = 'Ошибка словаря'
         logger.error(msg)
         raise exceptions.CheckResponseException(msg)
+
     homeworks_list = response.get('homeworks', None)
+
     if homeworks_list is None:
         msg = 'В ответе API нет словаря с домашней работой'
         logger.error(msg)
@@ -91,6 +95,7 @@ def parse_status(homework):
         raise KeyError(logger.error('Ошибка ключа \'status\''))
     elif homework['status'] not in HOMEWORK_STATUSES:
         raise logger.error('Ошибка статуса')
+
     homework_name = homework['homework_name']
     homework_status = homework['status']
     verdict = HOMEWORK_STATUSES[homework_status]
@@ -124,6 +129,7 @@ def main():
                 status = message
             else:
                 logger.info('Обновления статуса нет')
+
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             if error_status != str(error):

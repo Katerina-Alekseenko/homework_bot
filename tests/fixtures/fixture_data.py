@@ -15,7 +15,7 @@ def random_timestamp():
 def current_timestamp():
     return datetime.now().timestamp()
 
-
+ 
 @pytest.fixture
 def api_url():
     return 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
